@@ -6,3 +6,11 @@
 //
 
 import Foundation
+
+struct PageType : Codable {
+    let page: Int
+    let pageSize: Int
+    let totalPages: Int
+    let totalElements: Int
+    let content: [PageContent]
+}
