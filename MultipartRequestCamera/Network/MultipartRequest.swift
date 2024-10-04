@@ -7,7 +7,7 @@
 
 import Foundation
 
-private struct MultipartRequest {
+struct MultipartRequest {
     ///Result url request
     private var request: URLRequest
     private let boundary: String
@@ -72,6 +72,8 @@ private struct MultipartRequest {
                 print("sended data: \(String(data:self.request.httpBody!,encoding:.utf8) ?? "error")")
             }
         }
+        
+        task.resume()
     }
 }
 

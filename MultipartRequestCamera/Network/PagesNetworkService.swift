@@ -16,4 +16,27 @@ final class PagesNetworkService {
         components.host = "junior.balinasoft.com"
         return components
     }
+    
+    func uploadPhoto(
+        fileName:String,
+        photo: Data,
+        fileType:MultipartRequest.FileType = .jpeg) {
+            var photoUploadComponents = baseURLComponents
+            photoUploadComponents.path = uploadPhotoPath
+            
+            var request = MultipartRequest(url: photoUploadComponents.url!)
+            request.addFormField(
+                fieldName: "name",
+                value: "page.name")
+            request.addFile(
+                fieldName: "photo",
+                fileName: fileName,
+                file: photo,
+                fileType: fileType)
+            request.addFormField(
+                fieldName: "typeId",
+                value: String("2"))
+            
+            request.sendRequest()
+        }
 }
