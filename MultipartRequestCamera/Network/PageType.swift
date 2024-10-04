@@ -14,3 +14,10 @@ struct PageType : Codable {
     let totalElements: Int
     let content: [PageContent]
 }
+
+//MARK: - Equatable
+extension PageType : Equatable {
+    static func == (lhs: PageType, rhs: PageType) -> Bool {
+        lhs.page == rhs.page
+    }
+}
