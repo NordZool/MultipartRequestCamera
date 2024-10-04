@@ -14,8 +14,12 @@ class PagesTableViewController : UIViewController {
         let table = UITableView()
         table.delaysContentTouches = false
         table.dataSource = self
+        table.delegate = self
         return table
     }()
+    //MARK: - Public properties
+    ///Determines `y` offset from the bottom of tableView.contentSize when should start pagination
+    public var paginationOffset: CGFloat = 200
     
     //MARK: - Private properties
     private let viewModel: PagesViewModel
@@ -37,7 +41,6 @@ class PagesTableViewController : UIViewController {
         view.addSubview(tableView)
         updateTableViewLayout(with: view.bounds.size)
         subscribeToPageTypesUpdate()
-        viewModel.uploadNewPage()
     }
     
     override func viewWillTransition(
@@ -64,6 +67,7 @@ class PagesTableViewController : UIViewController {
     }
 }
 
+//MARK: - UITableViewDataSource
 extension PagesTableViewController : UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
         viewModel.pagesTypeSubject.value.count
@@ -85,5 +89,16 @@ extension PagesTableViewController : UITableViewDataSource {
         cell.contentConfiguration = config
         
         return cell
+    }
+}
+
+//MARK:
+extension PagesTableViewController : UITableViewDelegate {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let yPosition = scrollView.contentOffset.y
+        let scrollViewHeight = scrollView.bounds.size.height
+        if yPosition > tableView.contentSize.height - scrollViewHeight - paginationOffset {
+            viewModel.uploadNewPage()
+        }
     }
 }
