@@ -6,6 +6,8 @@
 //
 
 import Combine
+import Foundation
+
 
 class PagesViewModel {
     //MARK: - Public properties
@@ -25,7 +27,10 @@ class PagesViewModel {
             pagesNetworkService.getPageType(with: String(pageIndex + 1)) { [weak self] result in
                 switch result {
                 case .success(let pageType):
-                    self?.pagesTypeSubject.value.append(pageType)
+                    if let vm = self,
+                       !vm.pagesTypeSubject.value.contains(pageType) {
+                        vm.pagesTypeSubject.value.append(pageType)
+                    }
                 case .failure(let failure):
                     print(failure)
                 }
