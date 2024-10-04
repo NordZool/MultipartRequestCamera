@@ -14,6 +14,8 @@
 		8409C3802CAFEC12009F021C /* PagesNetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8409C37F2CAFEC12009F021C /* PagesNetworkService.swift */; };
 		8409C3842CB01456009F021C /* Data+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8409C3832CB01456009F021C /* Data+Extension.swift */; };
 		843E502B2CB0193000ACC27E /* MultipartRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 843E502A2CB0193000ACC27E /* MultipartRequest.swift */; };
+		843E502D2CB01EF100ACC27E /* PageType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 843E502C2CB01EF100ACC27E /* PageType.swift */; };
+		843E502F2CB01EFE00ACC27E /* PageContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 843E502E2CB01EFE00ACC27E /* PageContent.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +28,8 @@
 		8409C37F2CAFEC12009F021C /* PagesNetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagesNetworkService.swift; sourceTree = "<group>"; };
 		8409C3832CB01456009F021C /* Data+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data+Extension.swift"; sourceTree = "<group>"; };
 		843E502A2CB0193000ACC27E /* MultipartRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultipartRequest.swift; sourceTree = "<group>"; };
+		843E502C2CB01EF100ACC27E /* PageType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageType.swift; sourceTree = "<group>"; };
+		843E502E2CB01EFE00ACC27E /* PageContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageContent.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -74,6 +78,8 @@
 				8409C37F2CAFEC12009F021C /* PagesNetworkService.swift */,
 				8409C3832CB01456009F021C /* Data+Extension.swift */,
 				843E502A2CB0193000ACC27E /* MultipartRequest.swift */,
+				843E502C2CB01EF100ACC27E /* PageType.swift */,
+				843E502E2CB01EFE00ACC27E /* PageContent.swift */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -149,7 +155,9 @@
 			files = (
 				8409C3702CAFE4B7009F021C /* ViewController.swift in Sources */,
 				8409C36C2CAFE4B7009F021C /* AppDelegate.swift in Sources */,
+				843E502D2CB01EF100ACC27E /* PageType.swift in Sources */,
 				843E502B2CB0193000ACC27E /* MultipartRequest.swift in Sources */,
+				843E502F2CB01EFE00ACC27E /* PageContent.swift in Sources */,
 				8409C36E2CAFE4B7009F021C /* SceneDelegate.swift in Sources */,
 				8409C3802CAFEC12009F021C /* PagesNetworkService.swift in Sources */,
 				8409C3842CB01456009F021C /* Data+Extension.swift in Sources */,
