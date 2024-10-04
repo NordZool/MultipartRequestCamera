@@ -15,25 +15,32 @@ class PagesViewModel {
     
     //MARK: - Private properties
     private let pagesNetworkService: PagesNetworkService = .init()
+    private let backgroundQueue: DispatchQueue = .init(label: "backgroundPagesQueue", qos: .background)
+    private let semaphore: DispatchSemaphore = .init(value: 1)
     
     //MARK: - Public methods
     func uploadNewPage() {
-        let lastPageType = pagesTypeSubject.value.last
-        //-1 когда еще ни одной страницы нету в pagesTypeSubject
-        let pageIndex = lastPageType?.page ?? -1
-        let totalPages = lastPageType?.totalPages ?? -1
-        
-        if pageIndex != totalPages - 1 {
-            pagesNetworkService.getPageType(with: String(pageIndex + 1)) { [weak self] result in
-                switch result {
-                case .success(let pageType):
-                    if let vm = self,
-                       !vm.pagesTypeSubject.value.contains(pageType) {
-                        vm.pagesTypeSubject.value.append(pageType)
+        backgroundQueue.async {[weak self] in
+            self?.semaphore.wait()
+            
+            let lastPageType = self?.pagesTypeSubject.value.last
+            //-1 когда еще ни одной страницы нету в pagesTypeSubject
+            let pageIndex = lastPageType?.page ?? -1
+            let totalPages = lastPageType?.totalPages ?? -1
+            
+            if pageIndex != totalPages - 1 {
+                
+                self?.pagesNetworkService.getPageType(with: String(pageIndex + 1)) { result in
+                    switch result {
+                    case .success(let pageType):
+                            self?.pagesTypeSubject.value.append(pageType)
+                    case .failure(let failure):
+                        print(failure)
                     }
-                case .failure(let failure):
-                    print(failure)
+                    self?.semaphore.signal()
                 }
+            } else {
+                self?.semaphore.signal()
             }
         }
     }
