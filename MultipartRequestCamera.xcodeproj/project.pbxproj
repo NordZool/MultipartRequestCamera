@@ -12,6 +12,8 @@
 		8409C3702CAFE4B7009F021C /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8409C36F2CAFE4B7009F021C /* ViewController.swift */; };
 		8409C3752CAFE4B9009F021C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8409C3742CAFE4B9009F021C /* Assets.xcassets */; };
 		8409C3802CAFEC12009F021C /* PagesNetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8409C37F2CAFEC12009F021C /* PagesNetworkService.swift */; };
+		8409C3842CB01456009F021C /* Data+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8409C3832CB01456009F021C /* Data+Extension.swift */; };
+		843E502B2CB0193000ACC27E /* MultipartRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 843E502A2CB0193000ACC27E /* MultipartRequest.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,6 +24,8 @@
 		8409C3742CAFE4B9009F021C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		8409C3792CAFE4B9009F021C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8409C37F2CAFEC12009F021C /* PagesNetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagesNetworkService.swift; sourceTree = "<group>"; };
+		8409C3832CB01456009F021C /* Data+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data+Extension.swift"; sourceTree = "<group>"; };
+		843E502A2CB0193000ACC27E /* MultipartRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultipartRequest.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,12 +60,22 @@
 			children = (
 				8409C36B2CAFE4B7009F021C /* AppDelegate.swift */,
 				8409C36D2CAFE4B7009F021C /* SceneDelegate.swift */,
-				8409C37F2CAFEC12009F021C /* PagesNetworkService.swift */,
+				8409C3852CB015EA009F021C /* Network */,
 				8409C36F2CAFE4B7009F021C /* ViewController.swift */,
 				8409C3742CAFE4B9009F021C /* Assets.xcassets */,
 				8409C3792CAFE4B9009F021C /* Info.plist */,
 			);
 			path = MultipartRequestCamera;
+			sourceTree = "<group>";
+		};
+		8409C3852CB015EA009F021C /* Network */ = {
+			isa = PBXGroup;
+			children = (
+				8409C37F2CAFEC12009F021C /* PagesNetworkService.swift */,
+				8409C3832CB01456009F021C /* Data+Extension.swift */,
+				843E502A2CB0193000ACC27E /* MultipartRequest.swift */,
+			);
+			path = Network;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -135,8 +149,10 @@
 			files = (
 				8409C3702CAFE4B7009F021C /* ViewController.swift in Sources */,
 				8409C36C2CAFE4B7009F021C /* AppDelegate.swift in Sources */,
+				843E502B2CB0193000ACC27E /* MultipartRequest.swift in Sources */,
 				8409C36E2CAFE4B7009F021C /* SceneDelegate.swift in Sources */,
 				8409C3802CAFEC12009F021C /* PagesNetworkService.swift in Sources */,
+				8409C3842CB01456009F021C /* Data+Extension.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
