@@ -16,6 +16,7 @@
 		843E502D2CB01EF100ACC27E /* PageType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 843E502C2CB01EF100ACC27E /* PageType.swift */; };
 		843E502F2CB01EFE00ACC27E /* PageContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 843E502E2CB01EFE00ACC27E /* PageContent.swift */; };
 		843E50322CB02ACA00ACC27E /* PagesTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 843E50312CB02ACA00ACC27E /* PagesTableViewController.swift */; };
+		843E50342CB02D0C00ACC27E /* PagesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 843E50332CB02D0C00ACC27E /* PagesViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +31,7 @@
 		843E502C2CB01EF100ACC27E /* PageType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageType.swift; sourceTree = "<group>"; };
 		843E502E2CB01EFE00ACC27E /* PageContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageContent.swift; sourceTree = "<group>"; };
 		843E50312CB02ACA00ACC27E /* PagesTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagesTableViewController.swift; sourceTree = "<group>"; };
+		843E50332CB02D0C00ACC27E /* PagesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagesViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -65,6 +67,7 @@
 				8409C36B2CAFE4B7009F021C /* AppDelegate.swift */,
 				8409C36D2CAFE4B7009F021C /* SceneDelegate.swift */,
 				843E50312CB02ACA00ACC27E /* PagesTableViewController.swift */,
+				843E50332CB02D0C00ACC27E /* PagesViewModel.swift */,
 				8409C3852CB015EA009F021C /* Network */,
 				843E50302CB0210600ACC27E /* Extensions */,
 				8409C3742CAFE4B9009F021C /* Assets.xcassets */,
@@ -161,6 +164,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				843E50342CB02D0C00ACC27E /* PagesViewModel.swift in Sources */,
 				8409C36C2CAFE4B7009F021C /* AppDelegate.swift in Sources */,
 				843E502D2CB01EF100ACC27E /* PageType.swift in Sources */,
 				843E50322CB02ACA00ACC27E /* PagesTableViewController.swift in Sources */,

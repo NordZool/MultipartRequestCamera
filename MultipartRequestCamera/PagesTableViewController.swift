@@ -37,3 +37,4 @@ class PagesTableViewController : UIViewController {
         self.tableView.frame = CGRect.init(origin: .zero, size: size)
     }
 }
+
