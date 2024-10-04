@@ -45,7 +45,8 @@ final class PagesNetworkService {
         pageContent: PageContent,
         fileName:String,
         photo: Data,
-        fileType:MultipartRequest.FileType = .jpeg) {
+        fileType:MultipartRequest.FileType = .jpeg,
+        complition: @escaping (Error?) -> ()) {
             var photoUploadComponents = baseURLComponents
             photoUploadComponents.path = uploadPhotoPath
             
@@ -62,6 +63,6 @@ final class PagesNetworkService {
                 fieldName: "typeId",
                 value: String(pageContent.id))
             
-            request.sendRequest()
+            request.sendRequest(complition: complition)
         }
 }

@@ -57,7 +57,7 @@ struct MultipartRequest {
             request.httpBody!.append(data)
         }
     
-    mutating func sendRequest() {
+    mutating func sendRequest(complition: @escaping (Error?) -> ()) {
         request.httpBody!.append(string: "--Boundary-\(boundary)--")
         
         let task = URLSession.shared.dataTask(with: request) { [self] data, response, error in
@@ -65,11 +65,13 @@ struct MultipartRequest {
                response.statusCode == 200{
                 print("Succes")
                 print("\(String(data: data!, encoding: .utf8) ?? "error")")
+                complition(nil)
             } else {
                 print("Fail")
                 print("response data: \(String(data: data!, encoding: .utf8) ?? "error")")
                 print("sended header:\(self.request.allHTTPHeaderFields ?? ["":""])")
                 print("sended data: \(String(data:self.request.httpBody!,encoding:.utf8) ?? "error")")
+                complition(error)
             }
         }
         
