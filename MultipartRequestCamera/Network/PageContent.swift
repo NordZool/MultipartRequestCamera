@@ -6,3 +6,9 @@
 //
 
 import Foundation
+
+struct PageContent : Codable {
+    let id: Int
+    let name: String
+    let image: String?
+}
