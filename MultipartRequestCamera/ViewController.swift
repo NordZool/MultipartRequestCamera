@@ -12,10 +12,8 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .red
-        test.uploadPhoto(fileName: "image", photo: "data".data(using: .utf8)!)
+        test.uploadPhoto(pageContent: .init(id: 10, name: "tester", image: nil), fileName: "image", photo: "data".data(using: .utf8)!)
         // Do any additional setup after loading the view.
     }
-
-
 }
 

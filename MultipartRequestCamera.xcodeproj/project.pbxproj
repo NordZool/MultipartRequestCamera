@@ -65,6 +65,7 @@
 				8409C36B2CAFE4B7009F021C /* AppDelegate.swift */,
 				8409C36D2CAFE4B7009F021C /* SceneDelegate.swift */,
 				8409C3852CB015EA009F021C /* Network */,
+				843E50302CB0210600ACC27E /* Extensions */,
 				8409C36F2CAFE4B7009F021C /* ViewController.swift */,
 				8409C3742CAFE4B9009F021C /* Assets.xcassets */,
 				8409C3792CAFE4B9009F021C /* Info.plist */,
@@ -76,12 +77,19 @@
 			isa = PBXGroup;
 			children = (
 				8409C37F2CAFEC12009F021C /* PagesNetworkService.swift */,
-				8409C3832CB01456009F021C /* Data+Extension.swift */,
 				843E502A2CB0193000ACC27E /* MultipartRequest.swift */,
 				843E502C2CB01EF100ACC27E /* PageType.swift */,
 				843E502E2CB01EFE00ACC27E /* PageContent.swift */,
 			);
 			path = Network;
+			sourceTree = "<group>";
+		};
+		843E50302CB0210600ACC27E /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				8409C3832CB01456009F021C /* Data+Extension.swift */,
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

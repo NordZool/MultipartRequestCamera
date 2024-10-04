@@ -18,6 +18,7 @@ final class PagesNetworkService {
     }
     
     func uploadPhoto(
+        pageContent: PageContent,
         fileName:String,
         photo: Data,
         fileType:MultipartRequest.FileType = .jpeg) {
@@ -27,7 +28,7 @@ final class PagesNetworkService {
             var request = MultipartRequest(url: photoUploadComponents.url!)
             request.addFormField(
                 fieldName: "name",
-                value: "page.name")
+                value: pageContent.name)
             request.addFile(
                 fieldName: "photo",
                 fileName: fileName,
@@ -35,7 +36,7 @@ final class PagesNetworkService {
                 fileType: fileType)
             request.addFormField(
                 fieldName: "typeId",
-                value: String("2"))
+                value: String(pageContent.id))
             
             request.sendRequest()
         }
