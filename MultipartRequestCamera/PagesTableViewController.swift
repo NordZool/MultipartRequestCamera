@@ -11,10 +11,11 @@ import Combine
 class PagesTableViewController : UIViewController {
     //MARK: - Subviews
     lazy var tableView = {
-        let table = UITableView()
+        let table = UITableView(frame: .zero, style: .insetGrouped)
         table.delaysContentTouches = false
         table.dataSource = self
         table.delegate = self
+        
         return table
     }()
     //MARK: - Public properties
@@ -100,5 +101,14 @@ extension PagesTableViewController : UITableViewDelegate {
         if yPosition > tableView.contentSize.height - scrollViewHeight - paginationOffset {
             viewModel.uploadNewPage()
         }
+    }
+    
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        let pageNumber = viewModel.pagesTypeSubject
+            .value[section]
+            .page
+        let headerTitle = "Номер страницы: \(pageNumber)"
+        
+        return headerTitle
     }
 }
