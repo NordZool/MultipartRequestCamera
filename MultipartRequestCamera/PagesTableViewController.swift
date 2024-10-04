@@ -6,19 +6,20 @@
 //
 
 import UIKit
+import Combine
 
 class PagesTableViewController : UIViewController {
     //MARK: - Subviews
     lazy var tableView = {
         let table = UITableView()
         table.delaysContentTouches = false
-        table.backgroundColor = .blue
         table.dataSource = self
         return table
     }()
     
     //MARK: - Private properties
     private let viewModel: PagesViewModel
+    private var cancellable: Set<AnyCancellable> = .init()
     
     //MARK: - Inits
     init(viewModel: PagesViewModel) {
@@ -35,6 +36,8 @@ class PagesTableViewController : UIViewController {
         super.viewDidLoad()
         view.addSubview(tableView)
         updateTableViewLayout(with: view.bounds.size)
+        subscribeToPageTypesUpdate()
+        viewModel.uploadNewPage()
     }
     
     override func viewWillTransition(
@@ -51,7 +54,14 @@ class PagesTableViewController : UIViewController {
         self.tableView.frame = CGRect.init(origin: .zero, size: size)
     }
     
-    //Дописать подписку на изменения pageTypes в VM.
+    func subscribeToPageTypesUpdate() {
+        viewModel.pagesTypeSubject
+            .receive(on: DispatchQueue.main)
+            .sink {[weak self] _ in
+                self?.tableView.reloadData()
+            }
+            .store(in: &cancellable)
+    }
 }
 
 extension PagesTableViewController : UITableViewDataSource {
