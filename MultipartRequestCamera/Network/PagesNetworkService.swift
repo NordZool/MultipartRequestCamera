@@ -8,7 +8,6 @@
 import Foundation
 
 final class PagesNetworkService {
-    private let uploadPhotoPath:String = "/api/v2/photo"
     private let getPageTypePath: String = "/api/v2/photo/type"
     private var baseURLComponents: URLComponents {
         var components = URLComponents()
@@ -37,32 +36,18 @@ final class PagesNetworkService {
                     complition(.failure(error))
                 }
             }
-            
             task.resume()
         }
     
-    func uploadPhoto(
-        pageContent: PageContent,
-        fileName:String,
-        photo: Data,
-        fileType:MultipartRequest.FileType = .jpeg,
-        complition: @escaping (Error?) -> ()) {
-            var photoUploadComponents = baseURLComponents
-            photoUploadComponents.path = uploadPhotoPath
+    func downloadImage(from url: URL, complition: @escaping (Result<Data,Error>) -> ()) {
+        let task = URLSession.shared.dataTask(with: url) { data, _, error in
             
-            var request = MultipartRequest(url: photoUploadComponents.url!)
-            request.addFormField(
-                fieldName: "name",
-                value: pageContent.name)
-            request.addFile(
-                fieldName: "photo",
-                fileName: fileName,
-                file: photo,
-                fileType: fileType)
-            request.addFormField(
-                fieldName: "typeId",
-                value: String(pageContent.id))
-            
-            request.sendRequest(complition: complition)
+            if let data = data {
+                complition(.success(data))
+            } else if let error = error {
+                complition(.failure(error))
+            }
         }
+        task.resume()
+    }
 }
