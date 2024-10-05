@@ -46,6 +46,7 @@ class PagesTableViewController : UIViewController {
         view.addSubview(tableView)
         updateTableViewLayout(with: view.bounds.size)
         subscribeToPageTypesUpdate()
+        subscribeToAlertPresentation()
         registerCells()
     }
     
@@ -72,6 +73,25 @@ class PagesTableViewController : UIViewController {
             .store(in: &cancellable)
     }
     
+    func subscribeToAlertPresentation() {
+        photoViewModel.showAlertSubject
+            .receive(on: DispatchQueue.main)
+            .sink {[weak self] alertType in
+                switch alertType {
+                case .cameraAccessError:
+                    self?.presentGoToSettingAlert()
+                case .failedPhotoUpload:
+                    break
+                case .successPhotoUpload:
+                    break
+                    
+                default:
+                    break
+                }
+            }
+            .store(in: &cancellable)
+    }
+    
     func registerCells() {
         tableView.register(PageTableViewCell.self, forCellReuseIdentifier: PageTableViewCell.identifier)
     }
@@ -90,6 +110,22 @@ class PagesTableViewController : UIViewController {
             
             self.present(photoPicker, animated: true)
         }
+    }
+    
+    func presentGoToSettingAlert() {
+        let alert = UIAlertController(
+            title: "У нас нету доступа к камере",
+            message: "Вы можете изменить это в настройках",
+            preferredStyle: .alert)
+        alert.addAction(.init(title: "Хорошо", style: .cancel))
+        alert.addAction(.init(title: "Настройки", style: .default, handler: { _ in
+            if let appSettings = URL(string: UIApplication.openSettingsURLString),
+                UIApplication.shared.canOpenURL(appSettings) {
+                UIApplication.shared.open(appSettings)
+            }
+        }))
+        
+        self.present(alert, animated: true)
     }
 }
 
@@ -158,8 +194,6 @@ extension PagesTableViewController : UITableViewDelegate {
 extension PagesTableViewController :
     UIImagePickerControllerDelegate &
     UINavigationControllerDelegate {
-        
-    
         func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
             picker.dismiss(animated: true)
             
