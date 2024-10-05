@@ -11,15 +11,13 @@ import UIKit
 struct PageContent : Decodable {
     let id: Int
     let name: String
-    let imageLink: String?
-    
-    let cachedImage: UIImage? = nil
+    let imageURL: String?    
 }
 
 //MARK: - CodingKeys
 extension PageContent {
     enum CodingKeys: String, CodingKey {
         case id, name
-        case imageLink = "image"
+        case imageURL = "image"
     }
 }

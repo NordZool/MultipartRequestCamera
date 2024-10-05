@@ -18,6 +18,7 @@ class PagesViewModel {
     private let pagesNetworkService: PagesNetworkService = .init()
     private let backgroundQueue: DispatchQueue = .init(label: "backgroundPagesQueue", qos: .background)
     private let semaphore: DispatchSemaphore = .init(value: 1)
+    private let cachedImages: NSCache<NSURL,UIImage> = .init()
     
     //MARK: - Public methods
     func uploadNewPage() {
@@ -46,7 +47,31 @@ class PagesViewModel {
         }
     }
     
-    func loadImage(for: PageContent, complition: @escaping (UIImage?) -> () ) {
+    func loadImage(for pageContent: PageContent, complition: @escaping (UIImage?) -> ()) {
         
+        guard let url = pageContent.imageURL else {
+            complition(nil)
+            return
+        }
+        let nsURL = NSURL(string: url)!
+        
+        if let cachedImage = cachedImages.object(forKey: nsURL) {
+            complition(cachedImage)
+        } else {
+            //download image
+            let task = URLSession.shared.dataTask(with: nsURL as URL) { data, _, _ in
+                guard let data = data else {
+                    return
+                }
+                DispatchQueue.main.async {[weak self] in
+                    if let image = UIImage(data: data) {
+                        self?.cachedImages.setObject(image, forKey: nsURL)
+                        complition(image)
+                    } else {
+                        complition(nil)
+                    }
+                }
+            }
+        }
     }
 }
