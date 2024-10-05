@@ -87,7 +87,9 @@ extension PagesTableViewController : UITableViewDataSource {
         
         var config = cell.defaultContentConfiguration()
         config.text = "id: \(pageContent.id) , name: \(pageContent.name)"
+        
         cell.contentConfiguration = config
+        
         
         return cell
     }

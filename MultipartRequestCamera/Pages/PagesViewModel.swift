@@ -7,6 +7,7 @@
 
 import Combine
 import Foundation
+import UIKit
 
 
 class PagesViewModel {
@@ -43,5 +44,9 @@ class PagesViewModel {
                 self?.semaphore.signal()
             }
         }
+    }
+    
+    func loadImage(for: PageContent, complition: @escaping (UIImage?) -> () ) {
+        
     }
 }
