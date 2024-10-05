@@ -100,7 +100,7 @@ extension PagesTableViewController : UITableViewDataSource {
     }
 }
 
-//MARK:
+//MARK: - UITableViewDelegate
 extension PagesTableViewController : UITableViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let yPosition = scrollView.contentOffset.y
@@ -117,5 +117,9 @@ extension PagesTableViewController : UITableViewDelegate {
         let headerTitle = "Номер страницы: \(pageNumber)"
         
         return headerTitle
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
     }
 }
