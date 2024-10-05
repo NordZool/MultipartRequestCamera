@@ -8,10 +8,10 @@
 import Foundation
 import UIKit
 
-struct PageContent : Decodable {
+struct PageContent : Codable {
     let id: Int
     let name: String
-    let imageURL: String?    
+    let imageURL: String?
 }
 
 //MARK: - CodingKeys

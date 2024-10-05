@@ -70,6 +70,7 @@ class PagesViewModel {
                     complition(nil)
                 }
             }
+            task.resume()
         }
     }
 }

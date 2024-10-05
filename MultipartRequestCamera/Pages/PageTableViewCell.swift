@@ -8,6 +8,8 @@
 import UIKit
 
 class PageTableViewCell : UITableViewCell {
+    static let identifier: String = "PageTableViewCell"
+    
     lazy private var photoImage: UIImageView = {
         let imageView: UIImageView = .init()
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -40,6 +42,7 @@ class PageTableViewCell : UITableViewCell {
         pageContent: PageContent) {
             viewModel.loadImage(for: pageContent) { image in
                 DispatchQueue.main.async { [weak self] in
+                    print("Test \(image)")
                     self?.photoImage.image = image
                 }
             }
@@ -54,7 +57,7 @@ class PageTableViewCell : UITableViewCell {
             photoImage.widthAnchor.constraint(equalToConstant: 100),
             photoImage.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
             photoImage.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 20),
-            photoImage.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: 20)
+            photoImage.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -20)
         ])
     }
 }

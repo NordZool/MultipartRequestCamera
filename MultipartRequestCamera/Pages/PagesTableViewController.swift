@@ -42,6 +42,7 @@ class PagesTableViewController : UIViewController {
         view.addSubview(tableView)
         updateTableViewLayout(with: view.bounds.size)
         subscribeToPageTypesUpdate()
+        registerCells()
     }
     
     override func viewWillTransition(
@@ -66,6 +67,10 @@ class PagesTableViewController : UIViewController {
             }
             .store(in: &cancellable)
     }
+    
+    func registerCells() {
+        tableView.register(PageTableViewCell.self, forCellReuseIdentifier: PageTableViewCell.identifier)
+    }
 }
 
 //MARK: - UITableViewDataSource
@@ -80,16 +85,16 @@ extension PagesTableViewController : UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell()
+        let cell = tableView.dequeueReusableCell(
+            withIdentifier: PageTableViewCell.identifier,
+            for: indexPath) as! PageTableViewCell
+        
         let pageContent = viewModel.pagesTypeSubject
             .value[indexPath.section]
             .content[indexPath.row]
-        
-        var config = cell.defaultContentConfiguration()
-        config.text = "id: \(pageContent.id) , name: \(pageContent.name)"
-        
-        cell.contentConfiguration = config
-        
+        cell.configure(
+            with: viewModel,
+            pageContent: pageContent)
         
         return cell
     }
