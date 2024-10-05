@@ -77,9 +77,19 @@ class PagesTableViewController : UIViewController {
     }
     
     func presentPhotoPicker() {
-        let photoPicker = PhotoPickerViewController()
-        photoPicker.delegate = self
-        self.present(photoPicker, animated: true)
+        if UIImagePickerController.isSourceTypeAvailable(.camera) {
+            let photoPicker = UIImagePickerController()
+            let types = UIImagePickerController.availableMediaTypes(for: .camera) ?? []
+            photoPicker.mediaTypes = types
+            photoPicker.sourceType = .camera
+            photoPicker.cameraFlashMode = .off
+            photoPicker.cameraCaptureMode = .photo
+            photoPicker.cameraDevice = .rear
+            photoPicker.allowsEditing = false
+            photoPicker.delegate = self
+            
+            self.present(photoPicker, animated: true)
+        }
     }
 }
 

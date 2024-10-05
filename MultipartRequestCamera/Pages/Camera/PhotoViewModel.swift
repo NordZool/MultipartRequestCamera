@@ -20,12 +20,15 @@ final class PhotoViewModel {
     //MARK: - Private properties
     private let networkService: PhotoNetworkService = .init()
     private var cancellable: Set<AnyCancellable> = .init()
+    private let compressionQuality: CGFloat
     
     init(
         userName: String = "Фамилия Имя Отчество",
-        pageID: Int? = nil) {
+        pageID: Int? = nil,
+        compressionQuality: CGFloat = 0.5) {
             self.developerName = userName
             self.pageID = pageID
+            self.compressionQuality = compressionQuality
             subscribe(to: imageSubject)
         }
     
@@ -49,9 +52,10 @@ final class PhotoViewModel {
         imageSubject
             .receive(on: DispatchQueue.global())
             .sink { [weak self] image in
-                if let imageData = image?.jpegData(compressionQuality: 1),
+                if let compressionQuality = self?.compressionQuality,
+                   let imageData = image?.jpegData(compressionQuality: compressionQuality),
                    let name = self?.developerName,
-                   let typeId = self?.pageID{
+                   let typeId = self?.pageID {
                     
                     let fileName = "image\(UUID()).jpeg"
                     self?.networkService.uploadPhoto(
@@ -63,6 +67,8 @@ final class PhotoViewModel {
                             if let error {
                                 self?.showAlertSubject.send(.failedPhotoUpload)
                             } else {
+                                print("Sussecc")
+                                print(self!.pageID!)
                                 self?.showAlertSubject.send(.successPhotoUpload)
                             }
                         })
