@@ -75,6 +75,12 @@ class PagesTableViewController : UIViewController {
     func registerCells() {
         tableView.register(PageTableViewCell.self, forCellReuseIdentifier: PageTableViewCell.identifier)
     }
+    
+    func presentPhotoPicker() {
+        let photoPicker = PhotoPickerViewController()
+        photoPicker.delegate = self
+        self.present(photoPicker, animated: true)
+    }
 }
 
 //MARK: - UITableViewDataSource
@@ -124,8 +130,13 @@ extension PagesTableViewController : UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        photoViewModel.authorizedCameraAccess {
-            DispatchQueue.main.async {[weak self] in
+        photoViewModel.authorizedCameraAccess {[weak self] in
+            let pageId = self?.pagesViewModel.pagesTypeSubject
+                .value[indexPath.section]
+                .content[indexPath.row]
+                .id
+            self?.photoViewModel.pageID = pageId
+            DispatchQueue.main.async {
                 self?.presentPhotoPicker()
             }
         }
@@ -137,11 +148,7 @@ extension PagesTableViewController : UITableViewDelegate {
 extension PagesTableViewController :
     UIImagePickerControllerDelegate &
     UINavigationControllerDelegate {
-        func presentPhotoPicker() {
-            let photoPicker = PhotoPickerViewController()
-            photoPicker.delegate = self
-            self.present(photoPicker, animated: true)
-        }
+        
     
         func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
             picker.dismiss(animated: true)
