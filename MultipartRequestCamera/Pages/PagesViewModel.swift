@@ -35,7 +35,7 @@ class PagesViewModel {
                 self?.pagesNetworkService.getPageType(with: String(pageIndex + 1)) { result in
                     switch result {
                     case .success(let pageType):
-                            self?.pagesTypeSubject.value.append(pageType)
+                        self?.pagesTypeSubject.value.append(pageType)
                     case .failure(let failure):
                         print(failure)
                     }
@@ -59,17 +59,15 @@ class PagesViewModel {
             complition(cachedImage)
         } else {
             //download image
-            let task = URLSession.shared.dataTask(with: nsURL as URL) { data, _, _ in
+            let task = URLSession.shared.dataTask(with: nsURL as URL) {[weak self] data, _, _ in
                 guard let data = data else {
                     return
                 }
-                DispatchQueue.main.async {[weak self] in
-                    if let image = UIImage(data: data) {
-                        self?.cachedImages.setObject(image, forKey: nsURL)
-                        complition(image)
-                    } else {
-                        complition(nil)
-                    }
+                if let image = UIImage(data: data) {
+                    self?.cachedImages.setObject(image, forKey: nsURL)
+                    complition(image)
+                } else {
+                    complition(nil)
                 }
             }
         }
