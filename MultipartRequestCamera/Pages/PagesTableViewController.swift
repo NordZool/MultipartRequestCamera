@@ -23,14 +23,18 @@ class PagesTableViewController : UIViewController {
     public var paginationOffset: CGFloat = 200
     
     //MARK: - Private properties
-    private let viewModel: PagesViewModel
+    private let pagesViewModel: PagesViewModel
+    private let photoViewModel: PhotoViewModel
     private var cancellable: Set<AnyCancellable> = .init()
     
     //MARK: - Inits
-    init(viewModel: PagesViewModel) {
-        self.viewModel = viewModel
-        super.init(nibName: nil, bundle: nil)
-    }
+    init(
+        pagesViewModel: PagesViewModel,
+        photoViewModel: PhotoViewModel) {
+            self.pagesViewModel = pagesViewModel
+            self.photoViewModel = photoViewModel
+            super.init(nibName: nil, bundle: nil)
+        }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -60,7 +64,7 @@ class PagesTableViewController : UIViewController {
     }
     
     func subscribeToPageTypesUpdate() {
-        viewModel.pagesTypeSubject
+        pagesViewModel.pagesTypeSubject
             .receive(on: DispatchQueue.main)
             .sink {[weak self] _ in
                 self?.tableView.reloadData()
@@ -76,10 +80,10 @@ class PagesTableViewController : UIViewController {
 //MARK: - UITableViewDataSource
 extension PagesTableViewController : UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
-        viewModel.pagesTypeSubject.value.count
+        pagesViewModel.pagesTypeSubject.value.count
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        viewModel.pagesTypeSubject
+        pagesViewModel.pagesTypeSubject
             .value[section]
             .content.count
     }
@@ -89,11 +93,11 @@ extension PagesTableViewController : UITableViewDataSource {
             withIdentifier: PageTableViewCell.identifier,
             for: indexPath) as! PageTableViewCell
         
-        let pageContent = viewModel.pagesTypeSubject
+        let pageContent = pagesViewModel.pagesTypeSubject
             .value[indexPath.section]
             .content[indexPath.row]
         cell.configure(
-            with: viewModel,
+            with: pagesViewModel,
             pageContent: pageContent)
         
         return cell
@@ -106,12 +110,12 @@ extension PagesTableViewController : UITableViewDelegate {
         let yPosition = scrollView.contentOffset.y
         let scrollViewHeight = scrollView.bounds.size.height
         if yPosition > tableView.contentSize.height - scrollViewHeight - paginationOffset {
-            viewModel.uploadNewPage()
+            pagesViewModel.uploadNewPage()
         }
     }
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        let pageNumber = viewModel.pagesTypeSubject
+        let pageNumber = pagesViewModel.pagesTypeSubject
             .value[section]
             .page
         let headerTitle = "Номер страницы: \(pageNumber)"
@@ -120,6 +124,21 @@ extension PagesTableViewController : UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        photoViewModel.authorizedCameraAccess {[weak self] in
+            self?.presentPhotoPicker()
+        }
         tableView.deselectRow(at: indexPath, animated: true)
     }
+}
+
+//MARK: - UIImagePickerControllerDelegate & UINavigationControllerDelegate
+extension PagesTableViewController :
+    UIImagePickerControllerDelegate &
+    UINavigationControllerDelegate {
+        func presentPhotoPicker() {
+            let photoPicker = PhotoPickerViewController()
+            photoPicker.delegate = self
+            self.present(photoPicker, animated: true)
+        }
+    
 }

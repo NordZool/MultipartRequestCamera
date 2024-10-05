@@ -28,19 +28,20 @@ final class PhotoViewModel {
             subscribe(to: imageSubject)
         }
     
-    func authorizeCameraAccess(complition: @escaping () -> ()) {
+    func authorizedCameraAccess(complition: @escaping () -> ()) {
         let status = AVCaptureDevice.authorizationStatus(for: .video)
-        
-        if status == .notDetermined {
+        switch status {
+        case .notDetermined:
             AVCaptureDevice.requestAccess(for: .video) { result in
                 if result {
-                    complition()
+                   complition()
                 }
             }
-        } else {
+        case .authorized:
+            complition()
+        default:
             showAlertSubject.send(.cameraAccessError)
         }
-        
     }
     
     private func subscribe(to imageSubject: CurrentValueSubject<UIImage?,Never>) {
