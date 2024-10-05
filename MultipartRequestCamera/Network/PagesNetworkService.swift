@@ -39,5 +39,15 @@ final class PagesNetworkService {
             task.resume()
         }
     
-    
+    func downloadImage(from url: URL, complition: @escaping (Result<Data,Error>) -> ()) {
+        let task = URLSession.shared.dataTask(with: url) { data, _, error in
+            
+            if let data = data {
+                complition(.success(data))
+            } else if let error = error {
+                complition(.failure(error))
+            }
+        }
+        task.resume()
+    }
 }

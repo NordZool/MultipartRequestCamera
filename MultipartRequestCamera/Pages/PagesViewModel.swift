@@ -49,28 +49,30 @@ class PagesViewModel {
     
     func loadImage(for pageContent: PageContent, complition: @escaping (UIImage?) -> ()) {
         
-        guard let url = pageContent.imageURL else {
+        guard let url = pageContent.imageURL,
+        let nsURL = NSURL(string: url) else {
             complition(nil)
             return
         }
-        let nsURL = NSURL(string: url)!
         
         if let cachedImage = cachedImages.object(forKey: nsURL) {
             complition(cachedImage)
         } else {
             //download image
-            let task = URLSession.shared.dataTask(with: nsURL as URL) {[weak self] data, _, _ in
-                guard let data = data else {
-                    return
+            pagesNetworkService.downloadImage(
+                from: nsURL as URL) {[weak self] result in
+                    switch result {
+                    case .success(let data):
+                        if let image = UIImage(data: data) {
+                            self?.cachedImages.setObject(image, forKey: nsURL)
+                            complition(image)
+                        } else {
+                            complition(nil)
+                        }
+                    case .failure(let error):
+                        print(error)
+                    }
                 }
-                if let image = UIImage(data: data) {
-                    self?.cachedImages.setObject(image, forKey: nsURL)
-                    complition(image)
-                } else {
-                    complition(nil)
-                }
-            }
-            task.resume()
         }
     }
 }
