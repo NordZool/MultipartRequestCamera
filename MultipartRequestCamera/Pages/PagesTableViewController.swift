@@ -124,8 +124,10 @@ extension PagesTableViewController : UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        photoViewModel.authorizedCameraAccess {[weak self] in
-            self?.presentPhotoPicker()
+        photoViewModel.authorizedCameraAccess {
+            DispatchQueue.main.async {[weak self] in
+                self?.presentPhotoPicker()
+            }
         }
         tableView.deselectRow(at: indexPath, animated: true)
     }
@@ -141,4 +143,16 @@ extension PagesTableViewController :
             self.present(photoPicker, animated: true)
         }
     
+        func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+            picker.dismiss(animated: true)
+            
+            guard let image = info[.originalImage] as? UIImage else {
+                return
+            }
+            photoViewModel.imageSubject.send(image)
+        }
+        
+        public func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+                   picker.dismiss(animated: true)
+           }
 }
