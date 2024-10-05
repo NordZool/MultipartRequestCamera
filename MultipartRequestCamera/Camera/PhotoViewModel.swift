@@ -7,6 +7,7 @@
 
 import Combine
 import UIKit
+import AVFoundation
 
 final class PhotoViewModel {
     //MARK: - Subjects
@@ -27,12 +28,28 @@ final class PhotoViewModel {
             subscribe(to: imageSubject)
         }
     
+    func authorizeCameraAccess(complition: @escaping () -> ()) {
+        let status = AVCaptureDevice.authorizationStatus(for: .video)
+        
+        if status == .notDetermined {
+            AVCaptureDevice.requestAccess(for: .video) { result in
+                if result {
+                    complition()
+                }
+            }
+        } else {
+            showAlertSubject.send(.cameraAccessError)
+        }
+        
+    }
+    
     private func subscribe(to imageSubject: CurrentValueSubject<UIImage?,Never>) {
         imageSubject
             .receive(on: DispatchQueue.global())
             .sink { [weak self] image in
                 if let imageData = image?.jpegData(compressionQuality: 1),
                    let vm = self {
+                    
                     let fileName = "image\(UUID()).jpeg"
                     vm.networkService.uploadPhoto(
                         name: vm.developerName,
@@ -41,7 +58,9 @@ final class PhotoViewModel {
                         photo: imageData,
                         complition: { error in
                             if let error {
-                                
+                                self?.showAlertSubject.send(.failedPhotoUpload)
+                            } else {
+                                self?.showAlertSubject.send(.successPhotoUpload)
                             }
                         })
                 }
