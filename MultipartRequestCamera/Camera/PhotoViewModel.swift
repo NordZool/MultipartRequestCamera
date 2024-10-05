@@ -11,7 +11,7 @@ import UIKit
 final class PhotoViewModel {
     //MARK: - Subjects
     let imageSubject: CurrentValueSubject<UIImage?,Never> = .init(nil)
-    let showAlertSubject: CurrentValueSubject<Bool,Never> = .init(false)
+    let showAlertSubject: CurrentValueSubject<AlertType?,Never> = .init(nil)
     
     //MARK: - Private properties
     private let networkService: PhotoNetworkService = .init()
@@ -48,4 +48,10 @@ final class PhotoViewModel {
             }
             .store(in: &cancellable)
     }
+}
+
+enum AlertType {
+    case successPhotoUpload
+    case failedPhotoUpload
+    case cameraAccessError
 }
