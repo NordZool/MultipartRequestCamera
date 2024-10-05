@@ -16,6 +16,7 @@ class PageTableViewCell : UITableViewCell {
         imageView.contentMode = .scaleAspectFill
         imageView.layer.cornerRadius = 20
         imageView.clipsToBounds = true
+        imageView.image = .placeholder
         
         return imageView
     }()
@@ -56,7 +57,7 @@ class PageTableViewCell : UITableViewCell {
     //MARK: - Live cycle
     override func prepareForReuse() {
         super.prepareForReuse()
-        photoImage.image = nil
+        photoImage.image = .placeholder
     }
     
     //MARK: - Public methods
@@ -65,7 +66,9 @@ class PageTableViewCell : UITableViewCell {
         pageContent: PageContent) {
             viewModel.loadImage(for: pageContent) { image in
                 DispatchQueue.main.async { [weak self] in
-                    self?.photoImage.image = image
+                    if let image = image {
+                        self?.photoImage.image = image
+                    }
                 }
             }
             
