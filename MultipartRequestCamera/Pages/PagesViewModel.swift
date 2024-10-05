@@ -56,7 +56,6 @@ class PagesViewModel {
         let nsURL = NSURL(string: url)!
         
         if let cachedImage = cachedImages.object(forKey: nsURL) {
-            print("CachedImage found")
             complition(cachedImage)
         } else {
             //download image
