@@ -42,7 +42,6 @@ class PageTableViewCell : UITableViewCell {
         pageContent: PageContent) {
             viewModel.loadImage(for: pageContent) { image in
                 DispatchQueue.main.async { [weak self] in
-                    print("Test \(image)")
                     self?.photoImage.image = image
                 }
             }
@@ -56,8 +55,10 @@ class PageTableViewCell : UITableViewCell {
             photoImage.heightAnchor.constraint(equalToConstant: 100),
             photoImage.widthAnchor.constraint(equalToConstant: 100),
             photoImage.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
-            photoImage.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 20),
+            photoImage.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 20)
+                .priority(.required - 1),
             photoImage.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -20)
+                .priority(.required - 1)
         ])
     }
 }
