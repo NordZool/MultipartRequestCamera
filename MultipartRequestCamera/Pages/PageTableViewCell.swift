@@ -20,9 +20,32 @@ class PageTableViewCell : UITableViewCell {
         return imageView
     }()
     
+    lazy private var titleLabel: UILabel = {
+        let label: UILabel = .init()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.numberOfLines = 0
+        label.adjustsFontSizeToFitWidth = true
+        label.textAlignment = .left
+        label.minimumScaleFactor = 0.8
+        
+        return label
+    }()
+    
+    lazy private var subtitleLabel: UILabel = {
+        let label: UILabel = .init()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.textColor = .placeholderText
+        label.font = .systemFont(ofSize: 13)
+        label.numberOfLines = 0
+        label.textAlignment = .left
+        
+        return label
+    }()
+    
     //MARK: - Inits
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        separatorInset = .init(top: 0, left: 10, bottom: 0, right: 10)
         autolayoutConstraints()
     }
     
@@ -45,20 +68,38 @@ class PageTableViewCell : UITableViewCell {
                     self?.photoImage.image = image
                 }
             }
+            
+            titleLabel.text = pageContent.name
+            subtitleLabel.text = "id: \(pageContent.id)"
     }
     
     //MARK: - Public methods
     private func autolayoutConstraints() {
         contentView.addSubview(photoImage)
+        contentView.addSubview(titleLabel)
+        contentView.addSubview(subtitleLabel)
         
         NSLayoutConstraint.activate([
+            //photoImage
             photoImage.heightAnchor.constraint(equalToConstant: 100),
             photoImage.widthAnchor.constraint(equalToConstant: 100),
-            photoImage.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
-            photoImage.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 20)
+            photoImage.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
+            photoImage.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10)
                 .priority(.required - 1),
-            photoImage.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -20)
-                .priority(.required - 1)
+            photoImage.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10)
+                .priority(.required - 1),
+            
+            //titleLabel
+            titleLabel.topAnchor.constraint(equalTo: photoImage.topAnchor),
+            titleLabel.leadingAnchor.constraint(equalTo: photoImage.trailingAnchor, constant: 20),
+            titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
+            titleLabel.heightAnchor.constraint(lessThanOrEqualTo:photoImage.heightAnchor, constant: -20),
+            
+            //subtitleLabel
+            subtitleLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 10),
+            subtitleLabel.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -10),
+            subtitleLabel.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
+            subtitleLabel.trailingAnchor.constraint(equalTo: titleLabel.trailingAnchor)
         ])
     }
 }
