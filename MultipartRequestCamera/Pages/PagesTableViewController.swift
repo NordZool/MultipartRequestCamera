@@ -181,6 +181,7 @@ extension PagesTableViewController : UITableViewDataSource {
 
 //MARK: - UITableViewDelegate
 extension PagesTableViewController : UITableViewDelegate {
+    ///Pagination
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let yPosition = scrollView.contentOffset.y
         let scrollViewHeight = scrollView.bounds.size.height
@@ -224,7 +225,7 @@ extension PagesTableViewController :
             photoViewModel.imageSubject.send(image)
         }
         
-        public func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
                    picker.dismiss(animated: true)
            }
 }
