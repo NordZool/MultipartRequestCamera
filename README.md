@@ -13,5 +13,7 @@
 
 ## Installation
 You can clone this project by using **https://github.com/NordZool/MultipartRequestCamera.git** URL.
+
 Or you can download **.zip** by using **https://github.com/NordZool/MultipartRequestCamera/archive/refs/heads/development.zip** URL.
+
 This project requers **Xcode 15** version or later.
