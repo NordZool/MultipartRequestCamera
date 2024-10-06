@@ -23,14 +23,18 @@ class PagesTableViewController : UIViewController {
     public var paginationOffset: CGFloat = 200
     
     //MARK: - Private properties
-    private let viewModel: PagesViewModel
+    private let pagesViewModel: PagesViewModel
+    private let photoViewModel: PhotoViewModel
     private var cancellable: Set<AnyCancellable> = .init()
     
     //MARK: - Inits
-    init(viewModel: PagesViewModel) {
-        self.viewModel = viewModel
-        super.init(nibName: nil, bundle: nil)
-    }
+    init(
+        pagesViewModel: PagesViewModel,
+        photoViewModel: PhotoViewModel) {
+            self.pagesViewModel = pagesViewModel
+            self.photoViewModel = photoViewModel
+            super.init(nibName: nil, bundle: nil)
+        }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -42,6 +46,7 @@ class PagesTableViewController : UIViewController {
         view.addSubview(tableView)
         updateTableViewLayout(with: view.bounds.size)
         subscribeToPageTypesUpdate()
+        subscribeToAlertPresentation()
         registerCells()
     }
     
@@ -60,7 +65,7 @@ class PagesTableViewController : UIViewController {
     }
     
     func subscribeToPageTypesUpdate() {
-        viewModel.pagesTypeSubject
+        pagesViewModel.pagesTypeSubject
             .receive(on: DispatchQueue.main)
             .sink {[weak self] _ in
                 self?.tableView.reloadData()
@@ -68,18 +73,92 @@ class PagesTableViewController : UIViewController {
             .store(in: &cancellable)
     }
     
+    func subscribeToAlertPresentation() {
+        photoViewModel.showAlertSubject
+            .receive(on: DispatchQueue.main)
+            .sink {[weak self] alertType in
+                switch alertType {
+                case .cameraAccessError:
+                    self?.presentGoToSettingAlert()
+                case .failedPhotoUpload:
+                    
+                    self?.presentFailureUploadAlert()
+                case .successPhotoUpload:
+                    self?.presentSuccessUploadAlert()
+                    
+                default:
+                    break
+                }
+            }
+            .store(in: &cancellable)
+    }
+    
     func registerCells() {
         tableView.register(PageTableViewCell.self, forCellReuseIdentifier: PageTableViewCell.identifier)
+    }
+    
+    func presentPhotoPicker() {
+        if UIImagePickerController.isSourceTypeAvailable(.camera),
+           let types = UIImagePickerController.availableMediaTypes(for: .camera),
+           let imageType = types.first(where: {$0 == "public.image"}) {
+        
+            let photoPicker = UIImagePickerController()
+            photoPicker.mediaTypes = [imageType]
+            photoPicker.sourceType = .camera
+            photoPicker.cameraFlashMode = .off
+            photoPicker.cameraCaptureMode = .photo
+            photoPicker.cameraDevice = .rear
+            photoPicker.allowsEditing = false
+            photoPicker.delegate = self
+            
+            self.present(photoPicker, animated: true)
+        }
+    }
+    
+    func presentGoToSettingAlert() {
+        let alert = UIAlertController(
+            title: "У нас нету доступа к камере",
+            message: "Вы можете изменить это в настройках",
+            preferredStyle: .alert)
+        alert.addAction(.init(title: "Хорошо", style: .cancel))
+        alert.addAction(.init(title: "Настройки", style: .default, handler: { _ in
+            if let appSettings = URL(string: UIApplication.openSettingsURLString),
+                UIApplication.shared.canOpenURL(appSettings) {
+                UIApplication.shared.open(appSettings)
+            }
+        }))
+        
+        self.present(alert, animated: true)
+    }
+    
+    func presentSuccessUploadAlert() {
+        let alert = UIAlertController(
+            title: "Фотография успешно отправлена!",
+            message: "",
+            preferredStyle: .alert)
+        alert.addAction(.init(title: "Хорошо", style: .default))
+        
+        self.present(alert, animated: true)
+    }
+    
+    func presentFailureUploadAlert() {
+        let alert = UIAlertController(
+            title: "Произошла ошибка отправки!",
+            message: "",
+            preferredStyle: .alert)
+        alert.addAction(.init(title: "Хорошо", style: .default))
+        
+        self.present(alert,animated: true)
     }
 }
 
 //MARK: - UITableViewDataSource
 extension PagesTableViewController : UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
-        viewModel.pagesTypeSubject.value.count
+        pagesViewModel.pagesTypeSubject.value.count
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        viewModel.pagesTypeSubject
+        pagesViewModel.pagesTypeSubject
             .value[section]
             .content.count
     }
@@ -89,11 +168,11 @@ extension PagesTableViewController : UITableViewDataSource {
             withIdentifier: PageTableViewCell.identifier,
             for: indexPath) as! PageTableViewCell
         
-        let pageContent = viewModel.pagesTypeSubject
+        let pageContent = pagesViewModel.pagesTypeSubject
             .value[indexPath.section]
             .content[indexPath.row]
         cell.configure(
-            with: viewModel,
+            with: pagesViewModel,
             pageContent: pageContent)
         
         return cell
@@ -102,16 +181,17 @@ extension PagesTableViewController : UITableViewDataSource {
 
 //MARK: - UITableViewDelegate
 extension PagesTableViewController : UITableViewDelegate {
+    ///Pagination
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let yPosition = scrollView.contentOffset.y
         let scrollViewHeight = scrollView.bounds.size.height
         if yPosition > tableView.contentSize.height - scrollViewHeight - paginationOffset {
-            viewModel.uploadNewPage()
+            pagesViewModel.uploadNewPage()
         }
     }
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        let pageNumber = viewModel.pagesTypeSubject
+        let pageNumber = pagesViewModel.pagesTypeSubject
             .value[section]
             .page
         let headerTitle = "Номер страницы: \(pageNumber)"
@@ -120,6 +200,32 @@ extension PagesTableViewController : UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        photoViewModel.authorizedCameraAccess {[weak self] in
+            let pageId = self?.pagesViewModel.pageID(for: indexPath)
+            self?.photoViewModel.pageID = pageId
+            DispatchQueue.main.async {
+                self?.presentPhotoPicker()
+            }
+        }
         tableView.deselectRow(at: indexPath, animated: true)
     }
+}
+
+//MARK: - UIImagePickerControllerDelegate & UINavigationControllerDelegate
+extension PagesTableViewController :
+    UIImagePickerControllerDelegate &
+    UINavigationControllerDelegate {
+        func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+            picker.dismiss(animated: true)
+            
+            guard let image = info[.originalImage] as? UIImage else {
+                photoViewModel.showAlertSubject.send(.failedPhotoUpload)
+                return
+            }
+            photoViewModel.imageSubject.send(image)
+        }
+        
+        func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+                   picker.dismiss(animated: true)
+           }
 }

@@ -17,18 +17,19 @@ class PhotoNetworkService {
     }
     
     func uploadPhoto(
-        pageContent: PageContent,
+        name: String,
+        typeId: Int,
         fileName:String,
         photo: Data,
         fileType:MultipartRequest.FileType = .jpeg,
-        complition: @escaping (Error?) -> ()) {
+        complition: @escaping (Result<Void,MultipartRequestError>) -> ()) {
             var photoUploadComponents = baseURLComponents
             photoUploadComponents.path = uploadPhotoPath
             
             var request = MultipartRequest(url: photoUploadComponents.url!)
             request.addFormField(
                 fieldName: "name",
-                value: pageContent.name)
+                value: name)
             request.addFile(
                 fieldName: "photo",
                 fileName: fileName,
@@ -36,7 +37,7 @@ class PhotoNetworkService {
                 fileType: fileType)
             request.addFormField(
                 fieldName: "typeId",
-                value: String(pageContent.id))
+                value: String(typeId))
             
             request.sendRequest(complition: complition)
         }

@@ -57,7 +57,7 @@ struct MultipartRequest {
             request.httpBody!.append(data)
         }
     
-    mutating func sendRequest(complition: @escaping (Error?) -> ()) {
+    mutating func sendRequest(complition: @escaping (Result<Void,MultipartRequestError>) -> ()) {
         request.httpBody!.append(string: "--Boundary-\(boundary)--")
         
         let task = URLSession.shared.dataTask(with: request) { [self] data, response, error in
@@ -65,13 +65,13 @@ struct MultipartRequest {
                response.statusCode == 200{
                 print("Succes")
                 print("\(String(data: data!, encoding: .utf8) ?? "error")")
-                complition(nil)
+                complition(.success(()))
             } else {
                 print("Fail")
                 print("response data: \(String(data: data!, encoding: .utf8) ?? "error")")
                 print("sended header:\(self.request.allHTTPHeaderFields ?? ["":""])")
                 print("sended data: \(String(data:self.request.httpBody!,encoding:.utf8) ?? "error")")
-                complition(error)
+                complition(.failure(.failedPhotoUpload))
             }
         }
         
@@ -86,3 +86,7 @@ extension MultipartRequest {
     }
 }
 
+//MARK: - MultipartRequestError
+enum MultipartRequestError : Error {
+    case failedPhotoUpload
+}
