@@ -1,7 +1,7 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
-    "Can change in setting" : {
+    "Can change in settings" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
@@ -85,6 +85,9 @@
           }
         }
       }
+    },
+    "Page Number" : {
+
     },
     "Settings" : {
       "extractionState" : "manual",
