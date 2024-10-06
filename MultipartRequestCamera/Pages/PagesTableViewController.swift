@@ -117,11 +117,11 @@ class PagesTableViewController : UIViewController {
     
     func presentGoToSettingAlert() {
         let alert = UIAlertController(
-            title: "У нас нету доступа к камере",
-            message: "Вы можете изменить это в настройках",
+            title: String(localized:"No camera access"),
+            message: String(localized:"Can change in settings"),
             preferredStyle: .alert)
-        alert.addAction(.init(title: "Хорошо", style: .cancel))
-        alert.addAction(.init(title: "Настройки", style: .default, handler: { _ in
+        alert.addAction(.init(title: String(localized:"OK"), style: .cancel))
+        alert.addAction(.init(title: String(localized:"Settings"), style: .default, handler: { _ in
             if let appSettings = URL(string: UIApplication.openSettingsURLString),
                 UIApplication.shared.canOpenURL(appSettings) {
                 UIApplication.shared.open(appSettings)
@@ -133,20 +133,20 @@ class PagesTableViewController : UIViewController {
     
     func presentSuccessUploadAlert() {
         let alert = UIAlertController(
-            title: "Фотография успешно отправлена!",
+            title: String(localized:"Success photo upload"),
             message: "",
             preferredStyle: .alert)
-        alert.addAction(.init(title: "Хорошо", style: .default))
+        alert.addAction(.init(title: String(localized:"OK"), style: .default))
         
         self.present(alert, animated: true)
     }
     
     func presentFailureUploadAlert() {
         let alert = UIAlertController(
-            title: "Произошла ошибка отправки!",
+            title: String(localized: "Failure photo upload"),
             message: "",
             preferredStyle: .alert)
-        alert.addAction(.init(title: "Хорошо", style: .default))
+        alert.addAction(.init(title: String(localized:"OK"), style: .default))
         
         self.present(alert,animated: true)
     }
@@ -194,7 +194,7 @@ extension PagesTableViewController : UITableViewDelegate {
         let pageNumber = pagesViewModel.pagesTypeSubject
             .value[section]
             .page
-        let headerTitle = "Номер страницы: \(pageNumber)"
+        let headerTitle = "\(String(localized:"Page Number")): \(pageNumber)"
         
         return headerTitle
     }
