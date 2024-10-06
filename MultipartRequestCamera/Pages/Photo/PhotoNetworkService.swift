@@ -22,7 +22,7 @@ class PhotoNetworkService {
         fileName:String,
         photo: Data,
         fileType:MultipartRequest.FileType = .jpeg,
-        complition: @escaping (Error?) -> ()) {
+        complition: @escaping (Result<Void,MultipartRequestError>) -> ()) {
             var photoUploadComponents = baseURLComponents
             photoUploadComponents.path = uploadPhotoPath
             

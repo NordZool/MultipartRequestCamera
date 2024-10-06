@@ -93,13 +93,13 @@
 			path = EntitiesForNetwork;
 			sourceTree = "<group>";
 		};
-		8428E76B2CB1C3F100656948 /* Camera */ = {
+		8428E76B2CB1C3F100656948 /* Photo */ = {
 			isa = PBXGroup;
 			children = (
 				84859A8D2CB182FB0030840C /* PhotoNetworkService.swift */,
 				8428E76F2CB1C64500656948 /* PhotoViewModel.swift */,
 			);
-			path = Camera;
+			path = Photo;
 			sourceTree = "<group>";
 		};
 		843E50302CB0210600ACC27E /* Extensions */ = {
@@ -118,7 +118,7 @@
 				843E50332CB02D0C00ACC27E /* PagesViewModel.swift */,
 				84859A892CB066840030840C /* PageTableViewCell.swift */,
 				8409C37F2CAFEC12009F021C /* PagesNetworkService.swift */,
-				8428E76B2CB1C3F100656948 /* Camera */,
+				8428E76B2CB1C3F100656948 /* Photo */,
 			);
 			path = Pages;
 			sourceTree = "<group>";

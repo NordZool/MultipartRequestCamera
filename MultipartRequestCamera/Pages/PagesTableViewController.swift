@@ -81,6 +81,7 @@ class PagesTableViewController : UIViewController {
                 case .cameraAccessError:
                     self?.presentGoToSettingAlert()
                 case .failedPhotoUpload:
+                    
                     self?.presentFailureUploadAlert()
                 case .successPhotoUpload:
                     self?.presentSuccessUploadAlert()
@@ -200,7 +201,7 @@ extension PagesTableViewController : UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         photoViewModel.authorizedCameraAccess {[weak self] in
             let pageId = self?.pagesViewModel.pageID(for: indexPath)
-            self?.photoViewModel.pageID = -1
+            self?.photoViewModel.pageID = pageId
             DispatchQueue.main.async {
                 self?.presentPhotoPicker()
             }
@@ -217,6 +218,7 @@ extension PagesTableViewController :
             picker.dismiss(animated: true)
             
             guard let image = info[.originalImage] as? UIImage else {
+                photoViewModel.showAlertSubject.send(.failedPhotoUpload)
                 return
             }
             photoViewModel.imageSubject.send(image)

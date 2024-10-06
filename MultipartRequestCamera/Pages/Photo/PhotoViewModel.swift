@@ -51,6 +51,7 @@ final class PhotoViewModel {
     private func subscribe(to imageSubject: CurrentValueSubject<UIImage?,Never>) {
         imageSubject
             .receive(on: DispatchQueue.global())
+            .compactMap({$0})
             .sink { [weak self] image in
                 if let compressionQuality = self?.compressionQuality,
                    let imageData = image?.jpegData(compressionQuality: compressionQuality),
@@ -63,12 +64,13 @@ final class PhotoViewModel {
                         typeId: typeId,
                         fileName: fileName,
                         photo: imageData,
-                        complition: { error in
-                            if let error = error {
-                                print("alerting error")
-                                self?.showAlertSubject.send(.failedPhotoUpload)
-                            } else {
+                        complition: { result in
+                            switch result {
+                            case .success:
                                 self?.showAlertSubject.send(.successPhotoUpload)
+                            case .failure(let error):
+                                print(error)
+                                self?.showAlertSubject.send(.failedPhotoUpload)
                             }
                         })
                 } else {
