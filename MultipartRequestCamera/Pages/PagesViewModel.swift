@@ -75,4 +75,16 @@ class PagesViewModel {
                 }
         }
     }
+    
+    func pageID(for indexPath: IndexPath) -> Int? {
+        guard indexPath.section < pagesTypeSubject.value.count,
+              indexPath.row < pagesTypeSubject
+            .value[indexPath.section]
+            .content.count else {
+            return nil
+        }
+        return pagesTypeSubject.value[indexPath.section]
+            .content[indexPath.row]
+            .id
+    }
 }

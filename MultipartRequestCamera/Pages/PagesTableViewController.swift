@@ -81,9 +81,9 @@ class PagesTableViewController : UIViewController {
                 case .cameraAccessError:
                     self?.presentGoToSettingAlert()
                 case .failedPhotoUpload:
-                    break
+                    self?.presentFailureUploadAlert()
                 case .successPhotoUpload:
-                    break
+                    self?.presentSuccessUploadAlert()
                     
                 default:
                     break
@@ -97,10 +97,12 @@ class PagesTableViewController : UIViewController {
     }
     
     func presentPhotoPicker() {
-        if UIImagePickerController.isSourceTypeAvailable(.camera) {
+        if UIImagePickerController.isSourceTypeAvailable(.camera),
+           let types = UIImagePickerController.availableMediaTypes(for: .camera),
+           let imageType = types.first(where: {$0 == "public.image"}) {
+        
             let photoPicker = UIImagePickerController()
-            let types = UIImagePickerController.availableMediaTypes(for: .camera) ?? []
-            photoPicker.mediaTypes = types
+            photoPicker.mediaTypes = [imageType]
             photoPicker.sourceType = .camera
             photoPicker.cameraFlashMode = .off
             photoPicker.cameraCaptureMode = .photo
@@ -126,6 +128,26 @@ class PagesTableViewController : UIViewController {
         }))
         
         self.present(alert, animated: true)
+    }
+    
+    func presentSuccessUploadAlert() {
+        let alert = UIAlertController(
+            title: "Фотография успешно отправлена!",
+            message: "",
+            preferredStyle: .alert)
+        alert.addAction(.init(title: "Хорошо", style: .default))
+        
+        self.present(alert, animated: true)
+    }
+    
+    func presentFailureUploadAlert() {
+        let alert = UIAlertController(
+            title: "Произошла ошибка отправки!",
+            message: "",
+            preferredStyle: .alert)
+        alert.addAction(.init(title: "Хорошо", style: .default))
+        
+        self.present(alert,animated: true)
     }
 }
 
@@ -177,11 +199,8 @@ extension PagesTableViewController : UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         photoViewModel.authorizedCameraAccess {[weak self] in
-            let pageId = self?.pagesViewModel.pagesTypeSubject
-                .value[indexPath.section]
-                .content[indexPath.row]
-                .id
-            self?.photoViewModel.pageID = pageId
+            let pageId = self?.pagesViewModel.pageID(for: indexPath)
+            self?.photoViewModel.pageID = -1
             DispatchQueue.main.async {
                 self?.presentPhotoPicker()
             }

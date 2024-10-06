@@ -64,14 +64,15 @@ final class PhotoViewModel {
                         fileName: fileName,
                         photo: imageData,
                         complition: { error in
-                            if let error {
+                            if let error = error {
+                                print("alerting error")
                                 self?.showAlertSubject.send(.failedPhotoUpload)
                             } else {
-                                print("Sussecc")
-                                print(self!.pageID!)
                                 self?.showAlertSubject.send(.successPhotoUpload)
                             }
                         })
+                } else {
+                    self?.showAlertSubject.send(.failedPhotoUpload)
                 }
             }
             .store(in: &cancellable)
